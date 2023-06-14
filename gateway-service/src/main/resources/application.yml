@@ -1,0 +1,53 @@
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+spring:
+  config:
+    cloud:
+      uri: http://localhost:8888
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      routes:
+      - id: accountServiceRoute
+        predicates:
+        - Path=/account/**
+        uri: lb://account-service
+      - id: catalogServiceRoute
+        predicates:
+        - Path=/catalog/**
+        uri: lb://catalog-service
+        filters:
+        - name: CircuitBreaker
+          args:
+            name: catalogService
+            fallbackUri: forward:/fallback
+    discovery:
+      locator:
+        lower-case-service-id: true
+server:
+  port: 8087
+eureka:
+  instance:
+    hostname: localhost
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}:${random.uuid}       
+resilience4j:
+  circuitbreaker:
+    instances:
+      catalogService:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000
+        registerHealthIndicator: true
+        
