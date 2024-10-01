@@ -1,0 +1,22 @@
+server:
+  port: 8081
+spring:
+  webflux:
+    base-path: /catalog
+  data:
+    mongodb:
+      database: account
+      uri: mongodb://root:root@localhost:27017/account?authSource=admin
+  kafka:
+    bootstrap-servers: localhost:19093,localhost:19094,localhost:19095
+    consumer:
+      group-id: catalog-consumer-group
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"

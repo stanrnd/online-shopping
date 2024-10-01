@@ -1,0 +1,34 @@
+server:
+  port: 8081
+spring:
+  webflux:
+    base-path: /account
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/account
+    username: root
+    password: root
+    sql:
+      init:
+        mode: always
+  mysql:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+security:
+  oauth2:
+    resource:
+      jwt:
+        issuer-uri: http://localhost:8080
+
+  kafka:
+    bootstrap-servers: localhost:19093,localhost:19094,localhost:19095
+    consumer:
+      group-id: account-consumer-group
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"

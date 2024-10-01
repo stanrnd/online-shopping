@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="5 seconds">
+	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%-5level] [%c.%method:%line] [%msg]%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/eka-cleanup-scheduler.log</file>
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}] [%thread] [%-5level] [%c.%method:%line] [%msg]%n</pattern>
+		</encoder>
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>logs/eka-cleanup-scheduler-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<maxFileSize>10MB</maxFileSize>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>100MB</totalSizeCap>
+			<cleanHistoryOnStart>true</cleanHistoryOnStart>
+		</rollingPolicy>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="Console" />
+		<appender-ref ref="RollingFile" />
+	</root>
+</configuration>
